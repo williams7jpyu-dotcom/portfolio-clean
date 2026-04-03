@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODE BRIDGE | ITスクール LP</title>
+  <meta name="description" content="架空ITスクール CODE BRIDGE のランディングページ。課題提起、解決策、FAQ、申込フォームを実装。">
+  <style>
+    :root {
+      --bg: #f8faff;
+      --surface: #fff;
+      --line: #d5dff3;
+      --text: #121b30;
+      --muted: #4b5c84;
+      --primary: #1a56db;
+      --accent: #f59e0b;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.75; font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; }
+    img { max-width: 100%; display: block; height: auto; }
+    .container { width: min(var(--max), calc(100% - 2rem)); margin-inline: auto; }
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(248,250,255,.75);
+      backdrop-filter: blur(7px);
+      border-bottom: 1px solid transparent;
+      transition: .2s ease;
+    }
+    .site-header.scrolled { background: rgba(255,255,255,.95); border-color: var(--line); box-shadow: 0 8px 20px rgba(18, 27, 48, .06); }
+    .header-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+    .brand { text-decoration: none; font-size: 1.1rem; font-weight: 800; color: var(--primary); letter-spacing: .02em; }
+    .top-cta { text-decoration: none; color: #fff; background: var(--primary); border-radius: 999px; padding: .58rem .95rem; font-weight: 700; font-size: .88rem; }
+    .hero {
+      padding: 4.2rem 0 3.5rem;
+      background: linear-gradient(120deg, #eff4ff 10%, #fdf5e9 90%);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.2rem; align-items: center; }
+    .kicker { color: var(--primary); font-size: .77rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; margin: 0 0 .4rem; }
+    h1 { margin: 0 0 .7rem; line-height: 1.32; font-size: clamp(1.7rem, 4.7vw, 2.8rem); }
+    .hero p { margin: 0 0 1rem; color: var(--muted); }
+    .btn { display: inline-block; text-decoration: none; border-radius: 999px; font-weight: 700; padding: .67rem 1.15rem; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-outline { border: 1px solid #9fb6e7; color: var(--primary); margin-left: .55rem; }
+    .hero-art {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid #d1dcf5;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: center;
+      background: #e9efff;
+    }
+
+    section { padding: 3.4rem 0; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.35rem, 2.5vw, 1.95rem); }
+    .problem-list { margin: 0; padding-left: 1.15rem; }
+    .solution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+    .sol-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: .9rem; }
+    .sol-card strong { color: var(--primary); }
+    .tabs { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: .8rem; }
+    .tab-btn { border: 1px solid #b9c9ea; background: #fff; color: #2d4c93; border-radius: 999px; padding: .4rem .75rem; font-weight: 700; cursor: pointer; }
+    .tab-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .tab-panel { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: .9rem; display: none; }
+    .tab-panel.active { display: block; }
+    details { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: .2rem .75rem; margin-bottom: .6rem; }
+    summary { cursor: pointer; font-weight: 700; padding: .6rem 0; }
+    .form-wrap { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1rem; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+    .field { margin-bottom: .7rem; }
+    label { display: block; font-weight: 700; margin-bottom: .25rem; font-size: .84rem; color: #2e467f; }
+    input, select, textarea {
+      width: 100%; font: inherit; color: var(--text);
+      border: 1px solid #bcc9e6; border-radius: 10px; padding: .55rem .62rem; background: #fff;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .error-msg { color: #b6313a; font-size: .78rem; margin: .2rem 0 0; min-height: 1em; }
+    .submit-row { text-align: right; margin-top: .4rem; }
+    .submit-btn { border: 0; background: var(--accent); color: #412a00; border-radius: 999px; font-weight: 800; padding: .63rem 1rem; cursor: pointer; }
+    .thanks { padding: 1rem; border-radius: 12px; background: #f1fff1; border: 1px solid #bbebbb; color: #145514; font-weight: 700; }
+    .fade-up { opacity: 0; transform: translateY(16px); transition: .55s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+    footer { text-align: center; padding: 2rem 1rem 3rem; color: var(--muted); }
+    @media (max-width: 900px) {
+      .hero-inner, .solution-grid, .grid2 { grid-template-columns: 1fr; }
+      .btn-outline { margin-left: 0; margin-top: .5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand">CODE BRIDGE</a>
+      <a href="#contact" class="top-cta">無料相談を申し込む</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <p class="kicker">IT SCHOOL LP</p>
+          <h1>未経験でも、<br>エンジニアになれる。</h1>
+          <p>学習継続を支えるサポート体制と、転職までを見据えた実践型カリキュラムで、ITキャリアのスタートを後押しします。</p>
+          <a href="#contact" class="btn btn-primary">無料カウンセリングを申し込む</a>
+          <a href="../index.html" class="btn btn-outline">ポートフォリオへ戻る</a>
+        </div>
+        <img class="hero-art" src="../assets/work-lp.png" alt="IT学習をイメージしたビジュアル" width="1365" height="768" loading="lazy">
+      </div>
+    </section>
+
+    <section class="fade-up">
+      <div class="container">
+        <h2>こんな悩み、ありませんか？</h2>
+        <ul class="problem-list">
+          <li>独学で進めているが、学習計画に自信がない</li>
+          <li>転職に必要な技術とポートフォリオの水準がわからない</li>
+          <li>挫折せずに学び続ける環境がほしい</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="fade-up">
+      <div class="container">
+        <h2>CODE BRIDGEが選ばれる3つの理由</h2>
+        <div class="solution-grid">
+          <article class="sol-card"><strong>現役講師が伴走</strong><p>学習進捗に応じたレビューで、疑問点をその場で解消できます。</p></article>
+          <article class="sol-card"><strong>転職活動を支援</strong><p>応募書類の添削や面接対策まで、実務に近い視点でフォローします。</p></article>
+          <article class="sol-card"><strong>少人数で継続しやすい</strong><p>質問しやすい環境で、つまずきの早期解消を重視しています。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="fade-up">
+      <div class="container">
+        <h2>カリキュラム</h2>
+        <div class="tabs" id="tabs">
+          <button class="tab-btn active" type="button" data-tab="front">フロントエンド</button>
+          <button class="tab-btn" type="button" data-tab="back">バックエンド</button>
+          <button class="tab-btn" type="button" data-tab="infra">インフラ</button>
+        </div>
+        <article class="tab-panel active" data-panel="front">
+          <p><strong>HTML / CSS / JavaScript</strong> を中心に、UI実装、レスポンシブ対応、アクセシビリティを学びます。</p>
+        </article>
+        <article class="tab-panel" data-panel="back">
+          <p><strong>Java / SQL / Servlet / JSP</strong> を用いて、Webアプリケーション開発の基礎を身につけます。</p>
+        </article>
+        <article class="tab-panel" data-panel="infra">
+          <p><strong>Linux / Git / デプロイ基礎</strong> によって、開発運用の土台を理解します。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="fade-up">
+      <div class="container">
+        <h2>FAQ</h2>
+        <details>
+          <summary>未経験でも受講できますか？</summary>
+          <p>はい。基礎から段階的に進めるカリキュラムのため、未経験の方でも受講可能です。</p>
+        </details>
+        <details>
+          <summary>仕事と両立できますか？</summary>
+          <p>平日夜や土日を中心とした学習計画例を用意しているため、無理なく継続しやすい設計です。</p>
+        </details>
+      </div>
+    </section>
+
+    <section id="contact" class="fade-up">
+      <div class="container">
+        <h2>無料カウンセリング申し込み</h2>
+        <div class="form-wrap">
+          <form id="contact-form" novalidate>
+            <div class="grid2">
+              <div class="field">
+                <label for="name">お名前 *</label>
+                <input id="name" name="name" required>
+                <p class="error-msg" id="error-name"></p>
+              </div>
+              <div class="field">
+                <label for="email">メールアドレス *</label>
+                <input id="email" name="email" type="email" required>
+                <p class="error-msg" id="error-email"></p>
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label for="phone">電話番号</label>
+                <input id="phone" name="phone" placeholder="090-1234-5678">
+                <p class="error-msg" id="error-phone"></p>
+              </div>
+              <div class="field">
+                <label for="course">希望コース *</label>
+                <select id="course" name="course" required>
+                  <option value="">選択してください</option>
+                  <option value="front">フロントエンド</option>
+                  <option value="backend">バックエンド</option>
+                  <option value="fullstack">フルスタック</option>
+                </select>
+                <p class="error-msg" id="error-course"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="message">メッセージ</label>
+              <textarea id="message" name="message" maxlength="500"></textarea>
+              <p class="error-msg" id="error-message"></p>
+            </div>
+            <div class="submit-row">
+              <button type="submit" class="submit-btn">申し込む</button>
+            </div>
+          </form>
+          <div class="thanks" id="thanks" hidden>送信ありがとうございます。担当より2営業日以内にご連絡します。</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>&copy; 2026 CODE BRIDGE</small>
+  </footer>
+
+  <script>
+    'use strict';
+    document.addEventListener('DOMContentLoaded', function () {
+      var header = document.getElementById('site-header');
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 18) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+      });
+
+      var tabs = document.getElementById('tabs');
+      if (tabs) {
+        // タブ本体ではなく親要素で受けることで、ボタン数が増えても処理を共通化できる。
+        tabs.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-tab]');
+          if (!btn) return;
+          var key = btn.dataset.tab;
+          document.querySelectorAll('.tab-btn').forEach(function (el) { el.classList.toggle('active', el === btn); });
+          document.querySelectorAll('.tab-panel').forEach(function (panel) {
+            panel.classList.toggle('active', panel.dataset.panel === key);
+          });
+        });
+      }
+
+      var fadeTargets = document.querySelectorAll('.fade-up');
+      if ('IntersectionObserver' in window) {
+        // 対応ブラウザでは視界に入った順で表示し、読み進めやすさを作る。
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: .2 });
+        fadeTargets.forEach(function (el) { observer.observe(el); });
+      } else {
+        // 古い端末では演出を省略し、内容表示を優先する。
+        fadeTargets.forEach(function (el) { el.classList.add('visible'); });
+      }
+
+      var form = document.getElementById('contact-form');
+      var thanks = document.getElementById('thanks');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          clearErrors();
+          var data = {
+            name: form.name.value.trim(),
+            email: form.email.value.trim(),
+            phone: form.phone.value.trim(),
+            course: form.course.value,
+            message: form.message.value.trim()
+          };
+          var valid = validate(data);
+          if (!valid) return;
+          // 完了ページで名前を表示できるよう、同一タブ内だけ保持する。
+          try { sessionStorage.setItem('lp_last_name', data.name); } catch (_e) {}
+          // 実送信の代わりに完了ページへ遷移する設計。
+          window.location.href = './it-school-lp-complete.html';
+        });
+      }
+
+      function validate(data) {
+        // エラーを先に全消去し、現在の入力結果だけを表示する。
+        var ok = true;
+        if (!data.name) { setErr('name', 'お名前は必須です。'); ok = false; }
+        if (!data.email) { setErr('email', 'メールアドレスは必須です。'); ok = false; }
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { setErr('email', 'メール形式で入力してください。'); ok = false; }
+        if (data.phone && !/^[0-9-]+$/.test(data.phone)) { setErr('phone', '電話番号は半角数字とハイフンのみ使用できます。'); ok = false; }
+        if (!data.course) { setErr('course', '希望コースを選択してください。'); ok = false; }
+        if (data.message.length > 500) { setErr('message', 'メッセージは500文字以内で入力してください。'); ok = false; }
+        return ok;
+      }
+      function setErr(key, msg) { document.getElementById('error-' + key).textContent = msg; }
+      function clearErrors() {
+        ['name', 'email', 'phone', 'course', 'message'].forEach(function (key) {
+          document.getElementById('error-' + key).textContent = '';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

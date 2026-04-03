@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>詳細解説 | 学習制作01 カフェサイト</title>
+  <style>
+    body { margin: 0; font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; background: #f6f3ed; color: #2b241d; line-height: 1.75; }
+    main { width: min(960px, calc(100% - 2rem)); margin: 1.2rem auto 3rem; }
+    a { color: #7a5a35; }
+    .card { background: #fff; border: 1px solid #e2d5c5; border-radius: 14px; padding: 1rem 1.1rem; margin-top: .8rem; }
+    h1, h2 { margin: 0 0 .7rem; }
+    ul { margin: 0; padding-left: 1.1rem; }
+    .links { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .btn { text-decoration: none; border: 1px solid #c9b197; border-radius: 999px; padding: .45rem .8rem; font-weight: 700; background: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="../index.html">← ポートフォリオトップへ戻る</a></p>
+    <article class="card">
+      <h1>学習制作 01 | 架空カフェ「Café Soleil」コーポレートサイト</h1>
+      <p>HTML構造の正確性、CSS設計、レスポンシブ対応を主目的にした実装課題です。</p>
+      <h2>実装範囲</h2>
+      <ul>
+        <li>トップページ構成（Hero / Concept / Menu / News / Access）</li>
+        <li>SP向けハンバーガーメニュー</li>
+        <li>スムーススクロール、ページトップボタン</li>
+        <li>IntersectionObserver によるフェードイン演出</li>
+      </ul>
+      <h2>設計意図</h2>
+      <ul>
+        <li>見出し階層とセクション分割を明確にし、可読性を担保</li>
+        <li>Grid と Flex の使い分けで保守しやすいレイアウトを実現</li>
+        <li>アクセシビリティ配慮として skip link と alt を配置</li>
+      </ul>
+      <h2>改善予定</h2>
+      <ul>
+        <li>メニュー情報の外部データ化（JSON読み込み）</li>
+        <li>ニュースの更新運用を想定したコンポーネント化</li>
+      </ul>
+      <div class="links">
+        <a class="btn" href="cafe-latte.html">実装ページを開く</a>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

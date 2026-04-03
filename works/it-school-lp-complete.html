@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お申込み完了 | CODE BRIDGE</title>
+  <meta name="description" content="CODE BRIDGE 無料カウンセリング申込み完了ページ">
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --surface: #fff;
+      --line: #d5dff3;
+      --text: #17203a;
+      --muted: #4b5c84;
+      --primary: #1a56db;
+      --ok-bg: #effcf2;
+      --ok-line: #bde7c5;
+      --ok-text: #1c6a2d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 85% 0, #e6edff 0, transparent 45%), var(--bg);
+      color: var(--text);
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+      line-height: 1.75;
+      padding: 1rem;
+    }
+    .card {
+      width: min(720px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.2rem 1.2rem 1.35rem;
+      box-shadow: 0 16px 34px rgba(20, 30, 60, .06);
+    }
+    h1 { margin: 0 0 .75rem; font-size: clamp(1.35rem, 3.2vw, 1.9rem); line-height: 1.4; }
+    .lead {
+      margin: 0 0 1rem;
+      padding: .8rem .9rem;
+      border: 1px solid var(--ok-line);
+      border-radius: 12px;
+      background: var(--ok-bg);
+      color: var(--ok-text);
+      font-weight: 700;
+    }
+    p { margin: 0 0 .7rem; color: var(--muted); }
+    .actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: .55rem; }
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: .58rem .95rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-secondary { background: #fff; color: var(--primary); border-color: #b9c9ea; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>お申込みありがとうございました</h1>
+    <p class="lead">無料カウンセリングの受付が完了しました。</p>
+    <p>内容を確認のうえ、2営業日以内に担当よりご連絡いたします。</p>
+    <p id="name-line" hidden>お名前: <span id="name-value"></span> 様</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="./it-school-lp.html">LPへ戻る</a>
+      <a class="btn btn-secondary" href="../index.html">ポートフォリオへ戻る</a>
+    </div>
+  </main>
+  <script>
+    'use strict';
+    try {
+      var name = sessionStorage.getItem('lp_last_name');
+      if (name) {
+        document.getElementById('name-value').textContent = name;
+        document.getElementById('name-line').hidden = false;
+      }
+    } catch (_e) {}
+  </script>
+</body>
+</html>

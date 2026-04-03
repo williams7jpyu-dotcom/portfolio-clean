@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobTracker | 応募管理ミニアプリ</title>
+  <meta name="description" content="応募管理ミニアプリ。企業登録、編集、削除、ステータス絞り込み、LocalStorage永続化に対応。">
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --surface: #fff;
+      --line: #d4deec;
+      --text: #15223b;
+      --muted: #50617f;
+      --brand: #2458d3;
+      --brand-dark: #1d46a7;
+      --danger: #c2363f;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; line-height: 1.7; }
+    .wrap { width: min(1020px, calc(100% - 2rem)); margin: 1.2rem auto 3rem; }
+    .top-link { color: var(--brand); text-decoration: none; font-weight: 700; }
+    .app {
+      margin-top: .8rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .app-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: .7rem;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      background: linear-gradient(100deg, #f8faff, #f3f8ff);
+    }
+    .app-title { margin: 0; font-size: 1.35rem; }
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font-weight: 700;
+      padding: .55rem .9rem;
+      cursor: pointer;
+      font-size: .9rem;
+    }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-secondary { background: #fff; border-color: #bfcae1; color: #345181; }
+    .btn-danger { background: #fff; border-color: #e7b5b9; color: var(--danger); }
+    .filters {
+      margin: 0;
+      padding: .9rem 1rem;
+      list-style: none;
+      display: flex;
+      gap: .45rem;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--line);
+      background: #fcfdff;
+    }
+    .filter-btn {
+      border: 1px solid #c8d2e8;
+      background: #fff;
+      color: #3d5380;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 700;
+      white-space: nowrap;
+      padding: .35rem .75rem;
+      cursor: pointer;
+    }
+    .filter-btn.is-active { background: #275cd9; border-color: #275cd9; color: #fff; }
+    .list-area { padding: 1rem; min-height: 180px; }
+    .empty {
+      border: 1px dashed #c7d2e7;
+      border-radius: 12px;
+      color: var(--muted);
+      text-align: center;
+      padding: 1.2rem;
+      margin: 0;
+      background: #fbfdff;
+    }
+    .app-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: .65rem;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: .8rem .9rem;
+      background: #fff;
+    }
+    .card-top { display: flex; justify-content: space-between; gap: .8rem; align-items: start; }
+    .card h3 { margin: 0; font-size: 1rem; line-height: 1.45; }
+    .meta { margin: .3rem 0 0; color: var(--muted); font-size: .88rem; }
+    .badge {
+      border-radius: 999px;
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: .18rem .55rem;
+      display: inline-block;
+    }
+    .card-actions { margin-top: .7rem; display: flex; gap: .45rem; justify-content: flex-end; }
+    .memo { margin: .45rem 0 0; font-size: .88rem; color: #304461; }
+    dialog {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      width: min(620px, calc(100% - 1rem));
+      padding: 0;
+    }
+    dialog::backdrop { background: rgba(13, 22, 35, .5); }
+    .dialog-head { padding: .95rem 1rem; border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { margin: 0; font-size: 1.1rem; }
+    form { padding: .95rem 1rem 1rem; }
+    .field { margin-bottom: .72rem; }
+    label { display: block; font-weight: 700; font-size: .84rem; margin-bottom: .27rem; color: #364f7a; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #c2cde4;
+      border-radius: 10px;
+      padding: .55rem .62rem;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    .error-msg { color: #b22e38; font-size: .78rem; margin: .23rem 0 0; }
+    .dialog-actions { display: flex; justify-content: end; gap: .5rem; margin-top: .8rem; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a href="../index.html" class="top-link">← ポートフォリオトップへ戻る</a>
+
+    <section class="app" aria-label="応募管理ミニアプリ">
+      <header class="app-header">
+        <h1 class="app-title">JobTracker</h1>
+        <button id="open-create" class="btn btn-primary" type="button">+ 新規登録</button>
+      </header>
+
+      <ul class="filters" id="filters" aria-label="ステータスフィルター">
+        <li><button class="filter-btn is-active" type="button" data-filter="all">すべて</button></li>
+        <li><button class="filter-btn" type="button" data-filter="document">書類選考中</button></li>
+        <li><button class="filter-btn" type="button" data-filter="first_interview">一次面接</button></li>
+        <li><button class="filter-btn" type="button" data-filter="second_interview">二次面接</button></li>
+        <li><button class="filter-btn" type="button" data-filter="offer">内定</button></li>
+        <li><button class="filter-btn" type="button" data-filter="rejected">不採用</button></li>
+      </ul>
+
+      <div class="list-area">
+        <ul id="app-list" class="app-list" aria-live="polite"></ul>
+        <p id="empty" class="empty">登録データがありません。右上の「新規登録」から追加してください。</p>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="app-dialog">
+    <div class="dialog-head">
+      <h2 id="dialog-title">応募情報を登録</h2>
+    </div>
+    <form id="app-form" novalidate>
+      <input type="hidden" id="edit-id">
+      <div class="field">
+        <label for="company">企業名 *</label>
+        <input id="company" name="company" required>
+        <p class="error-msg" id="error-company"></p>
+      </div>
+      <div class="field">
+        <label for="position">職種 *</label>
+        <input id="position" name="position" required>
+        <p class="error-msg" id="error-position"></p>
+      </div>
+      <div class="field">
+        <label for="appliedAt">応募日 *</label>
+        <input id="appliedAt" name="appliedAt" type="date" required>
+        <p class="error-msg" id="error-appliedAt"></p>
+      </div>
+      <div class="field">
+        <label for="status">ステータス *</label>
+        <select id="status" name="status" required>
+          <option value="">選択してください</option>
+          <option value="document">書類選考中</option>
+          <option value="first_interview">一次面接</option>
+          <option value="second_interview">二次面接</option>
+          <option value="offer">内定</option>
+          <option value="rejected">不採用</option>
+        </select>
+        <p class="error-msg" id="error-status"></p>
+      </div>
+      <div class="field">
+        <label for="memo">メモ</label>
+        <textarea id="memo" name="memo" maxlength="500"></textarea>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" id="cancel-btn" class="btn btn-secondary">キャンセル</button>
+        <button type="submit" class="btn btn-primary">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    'use strict';
+    (function () {
+      // 保存キーを固定しておくと、将来キー名変更時の移行判断がしやすい。
+      var STORAGE_KEY = 'job_tracker_items_v1';
+      var STATUS = {
+        document: { label: '書類選考中', color: '#6B9ED2' },
+        first_interview: { label: '一次面接', color: '#F5A623' },
+        second_interview: { label: '二次面接', color: '#9B59B6' },
+        offer: { label: '内定', color: '#2ECC71' },
+        rejected: { label: '不採用', color: '#E74C3C' }
+      };
+
+      // 表示状態（データ本体とフィルター）を1か所で持つ。
+      var state = {
+        items: loadItems(),
+        filter: 'all'
+      };
+
+      var listEl = document.getElementById('app-list');
+      var emptyEl = document.getElementById('empty');
+      var dialog = document.getElementById('app-dialog');
+      var form = document.getElementById('app-form');
+      var dialogTitle = document.getElementById('dialog-title');
+      var editIdInput = document.getElementById('edit-id');
+
+      document.getElementById('open-create').addEventListener('click', function () {
+        openDialog();
+      });
+      document.getElementById('cancel-btn').addEventListener('click', function () {
+        dialog.close();
+      });
+
+      document.getElementById('filters').addEventListener('click', function (e) {
+        // ボタンを個別に監視する代わりに親要素で受けると、項目追加時の修正範囲が小さい。
+        var btn = e.target.closest('[data-filter]');
+        if (!btn) return;
+        state.filter = btn.dataset.filter;
+        document.querySelectorAll('.filter-btn').forEach(function (el) {
+          el.classList.toggle('is-active', el === btn);
+        });
+        render();
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearErrors();
+        var payload = {
+          company: form.company.value.trim(),
+          position: form.position.value.trim(),
+          appliedAt: form.appliedAt.value,
+          status: form.status.value,
+          memo: form.memo.value.trim()
+        };
+        var invalid = validate(payload);
+        if (invalid) return;
+
+        // hidden値にIDがあれば編集、なければ新規作成として扱う。
+        var id = editIdInput.value;
+        if (id) {
+          state.items = state.items.map(function (item) { return item.id === id ? Object.assign({ id: id }, payload) : item; });
+        } else {
+          state.items.push(Object.assign({ id: createId() }, payload));
+        }
+        persist();
+        render();
+        dialog.close();
+      });
+
+      listEl.addEventListener('click', function (e) {
+        // リスト内の編集/削除をイベント委譲で処理し、カードごとのリスナー増加を防ぐ。
+        var btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        var id = btn.dataset.id;
+        if (!id) return;
+        if (btn.dataset.action === 'edit') {
+          var target = state.items.find(function (item) { return item.id === id; });
+          if (!target) return;
+          openDialog(target);
+          return;
+        }
+        if (btn.dataset.action === 'delete') {
+          if (!window.confirm('この応募情報を削除しますか？')) return;
+          state.items = state.items.filter(function (item) { return item.id !== id; });
+          persist();
+          render();
+        }
+      });
+
+      function createId() {
+        // 対応ブラウザではUUIDを優先し、未対応環境向けに簡易フォールバックを持つ。
+        if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+        return String(Date.now()) + Math.random().toString(16).slice(2);
+      }
+
+      function openDialog(item) {
+        form.reset();
+        clearErrors();
+        if (item) {
+          dialogTitle.textContent = '応募情報を編集';
+          editIdInput.value = item.id;
+          form.company.value = item.company;
+          form.position.value = item.position;
+          form.appliedAt.value = item.appliedAt;
+          form.status.value = item.status;
+          form.memo.value = item.memo || '';
+        } else {
+          dialogTitle.textContent = '応募情報を登録';
+          editIdInput.value = '';
+          // 新規入力時は当日の日付を入れて、入力負担を減らす。
+          form.appliedAt.value = new Date().toISOString().slice(0, 10);
+        }
+        dialog.showModal();
+      }
+
+      function validate(payload) {
+        var ok = true;
+        if (!payload.company) { setError('company', '企業名は必須です。'); ok = false; }
+        if (!payload.position) { setError('position', '職種は必須です。'); ok = false; }
+        if (!payload.appliedAt) { setError('appliedAt', '応募日は必須です。'); ok = false; }
+        if (!payload.status) { setError('status', 'ステータスを選択してください。'); ok = false; }
+        return !ok;
+      }
+      function setError(name, msg) { document.getElementById('error-' + name).textContent = msg; }
+      function clearErrors() {
+        ['company', 'position', 'appliedAt', 'status'].forEach(function (name) {
+          document.getElementById('error-' + name).textContent = '';
+        });
+      }
+
+      function render() {
+        // 一覧は応募日の新しい順に統一して、更新後の見通しを保つ。
+        var items = state.items.slice().sort(function (a, b) {
+          if (a.appliedAt < b.appliedAt) return 1;
+          if (a.appliedAt > b.appliedAt) return -1;
+          return 0;
+        });
+        if (state.filter !== 'all') items = items.filter(function (item) { return item.status === state.filter; });
+        listEl.innerHTML = '';
+        emptyEl.hidden = items.length > 0;
+        items.forEach(function (item) {
+          var status = STATUS[item.status] || { label: item.status, color: '#888' };
+          var li = document.createElement('li');
+          li.className = 'card';
+          li.innerHTML = [
+            '<div class="card-top">',
+            '<div><h3>' + escapeHtml(item.company) + ' / ' + escapeHtml(item.position) + '</h3>',
+            '<p class="meta">応募日: ' + escapeHtml(item.appliedAt) + '</p></div>',
+            '<span class="badge" style="background:' + status.color + ';">' + status.label + '</span>',
+            '</div>',
+            item.memo ? '<p class="memo">メモ: ' + escapeHtml(item.memo) + '</p>' : '',
+            '<div class="card-actions">',
+            '<button class="btn btn-secondary" type="button" data-action="edit" data-id="' + item.id + '">編集</button>',
+            '<button class="btn btn-danger" type="button" data-action="delete" data-id="' + item.id + '">削除</button>',
+            '</div>'
+          ].join('');
+          listEl.appendChild(li);
+        });
+      }
+
+      function loadItems() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return [];
+          var parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          // 保存データが壊れていても画面を止めないため、空配列で継続する。
+          return [];
+        }
+      }
+      function persist() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
+      }
+      function escapeHtml(str) {
+        // 入力値をHTML化する前にエスケープし、表示時の崩れや注入を防ぐ。
+        return String(str)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
+      }
+
+      render();
+    })();
+  </script>
+</body>
+</html>

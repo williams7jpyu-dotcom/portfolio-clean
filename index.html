@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>西村 祐太 | ポートフォリオ</title>
+  <meta name="description" content="西村 祐太のポートフォリオ。職務経歴、強み、学習中の技術、制作物を掲載しています。">
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --line: #d8e0ea;
+      --text: #1c2430;
+      --muted: #4b5b70;
+      --brand: #006ea8;
+      --brand-dark: #00527d;
+      --chip-bg: #eaf5ff;
+      --radius: 14px;
+      --max: 1080px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: radial-gradient(circle at 85% 0%, #e6f3ff 0%, transparent 40%), var(--bg);
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+    img { max-width: 100%; display: block; height: auto; }
+    a { color: var(--brand); }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: var(--brand);
+      color: #fff;
+      padding: .5rem 1rem;
+      z-index: 999;
+      border-radius: 0 0 8px 0;
+    }
+    .skip-link:focus { left: 0; }
+    :focus-visible {
+      outline: 3px solid #2f89b8;
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.9);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner, .section-inner {
+      width: min(var(--max), calc(100% - 2rem));
+      margin-inline: auto;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+      gap: 1rem;
+    }
+    .logo {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .nav-list {
+      display: flex;
+      list-style: none;
+      gap: 1.4rem;
+      padding: 0;
+      margin: 0;
+    }
+    .nav-list a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: .94rem;
+    }
+    .nav-list a:hover { color: var(--brand); }
+
+    .hamburger {
+      display: none;
+      border: none;
+      background: none;
+      width: 40px;
+      height: 40px;
+      padding: 6px;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      margin: 6px 0;
+      background: var(--text);
+      transition: .2s;
+    }
+    .hamburger.is-open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .hamburger.is-open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    section { padding: 4.8rem 0; border-bottom: 1px solid var(--line); }
+    h2 {
+      margin: 0 0 1.6rem;
+      font-size: clamp(1.5rem, 2.1vw, 2rem);
+    }
+    p { margin: 0 0 1rem; }
+
+    .hero {
+      padding: 5.5rem 0 4.5rem;
+      background: linear-gradient(140deg, #fbfdff, #f1f8ff);
+    }
+    .hero-inner {
+      width: min(var(--max), calc(100% - 2rem));
+      margin-inline: auto;
+      display: grid;
+      grid-template-columns: 1.3fr .8fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .hero-kicker {
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .74rem;
+      font-weight: 700;
+      margin-bottom: .3rem;
+    }
+    .hero-title {
+      font-size: clamp(1.8rem, 4.2vw, 2.8rem);
+      line-height: 1.3;
+      margin: 0 0 1rem;
+    }
+    .hero-text { color: var(--muted); max-width: 52ch; }
+    .hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+    .button {
+      border-radius: 999px;
+      padding: .66rem 1.25rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid transparent;
+      display: inline-block;
+      transition: .2s;
+    }
+    .button-primary { background: var(--brand); color: #fff; }
+    .button-primary:hover { background: var(--brand-dark); }
+    .button-secondary { border-color: var(--brand); color: var(--brand); background: #fff; }
+    .button-secondary:hover { background: #eaf5ff; }
+
+    .hero-image {
+      width: min(290px, 70%);
+      margin-inline: auto;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 18px 40px rgba(20, 40, 70, .15);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.5fr .9fr;
+      gap: 1.8rem;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+    }
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .timeline li {
+      border-bottom: 1px dashed var(--line);
+      padding: .7rem 0;
+      font-size: .95rem;
+    }
+    .timeline li:last-child { border-bottom: none; }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .work-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
+    .work-card h3 { margin: 0; font-size: 1rem; line-height: 1.5; }
+    .work-card figure { margin: 0; }
+    .work-card img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #dfe7f0;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #f2f8ff;
+    }
+    .work-meta { color: var(--muted); font-size: .92rem; margin: 0; }
+    .tags {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin: 0;
+      padding: 0;
+    }
+    .tags li {
+      background: var(--chip-bg);
+      color: #005f90;
+      border: 1px solid #c8e3f8;
+      border-radius: 999px;
+      font-size: .75rem;
+      padding: .15rem .55rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 1rem;
+    }
+    .skills-grid h3 {
+      margin: 0 0 .8rem;
+      font-size: .85rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--brand);
+    }
+    .skills-grid ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .skills-grid li {
+      border-bottom: 1px solid #e4eaf2;
+      padding: .52rem 0;
+      font-size: .93rem;
+    }
+    .skills-grid li:last-child { border-bottom: none; }
+
+    .contact-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .contact-list li {
+      display: flex;
+      gap: .8rem;
+      align-items: baseline;
+      margin-bottom: .6rem;
+    }
+    .contact-label {
+      width: 70px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    footer {
+      padding: 2rem 1rem 3rem;
+      text-align: center;
+      color: #5c6b7f;
+      font-size: .82rem;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .about-grid,
+      .works-grid,
+      .skills-grid { grid-template-columns: 1fr; }
+      .hero-image { width: min(240px, 55vw); }
+    }
+    @media (max-width: 760px) {
+      .hamburger { display: inline-block; }
+      .site-nav {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        display: none;
+      }
+      .site-nav.is-open { display: block; }
+      .nav-list { display: block; }
+      .nav-list a {
+        display: block;
+        padding: .9rem 1rem;
+      }
+      section { padding: 3.5rem 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; }
+      .fade-up { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">本文へスキップ</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="logo">Yuta Nishimura</p>
+      <button class="hamburger" aria-label="メニューを開く" aria-controls="site-nav" aria-expanded="false" type="button">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="メインナビゲーション">
+        <ul class="nav-list">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#works">Works</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="hero" class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div>
+          <p class="hero-kicker fade-up">Portfolio</p>
+          <h1 id="hero-title" class="hero-title fade-up">西村 祐太</h1>
+          <p class="hero-text fade-up">
+            金融機関向け資料の校正・制作業務を通じて、品質管理・納期管理・正確な情報整理を経験してきました。
+            現在は職業訓練校で Java / MySQL / Git / Linux / HTML / CSS / JavaScript を学習し、実装力を高めています。
+          </p>
+          <div class="hero-actions fade-up">
+            <a class="button button-primary" href="#works">作品を見る</a>
+            <a class="button button-secondary" href="#contact">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="fade-up">
+          <img src="assets/profile.png" alt="西村祐太のプロフィール画像" class="hero-image" width="290" height="290" loading="eager">
+        </div>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-inner">
+        <h2 id="about-title" class="fade-up">About</h2>
+        <div class="about-grid">
+          <div class="panel fade-up">
+            <p>2025年10月より、職業訓練校にてプログラミング学習を開始。Javaを中心に、オブジェクト指向プログラミング、データベース設計（MySQL）、バージョン管理（Git）、Linux基礎、Webフロントエンド技術（HTML/CSS/JavaScript）、サーブレット・JSPによるWebアプリケーション開発を体系的に学習。現在はPythonの授業を受けています。詳しい内容は履歴書・職務経歴書をご覧ください。</p>
+          </div>
+          <aside class="panel fade-up" aria-label="略歴">
+            <h3>Timeline</h3>
+            <ul class="timeline">
+              <li>2014.04 - 2016.07: 株式会社バレンタインブルーコーポレーション</li>
+              <li>2016.09 - 2017.02: 派遣（メラルーカ・オブ・ジャパン・インク）</li>
+              <li>2017.02 - 2017.08: 派遣（東京エアポートレストラン株式会社）</li>
+              <li>2017.09 - 2025.08: 株式会社ウィリアムズ・リー・ジャパン</li>
+              <li>2025.10 - 2026.04: とぴあITスクール新宿校（アプリ・WEB・システムエンジニア養成科）</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="works" aria-labelledby="works-title">
+      <div class="section-inner">
+        <h2 id="works-title" class="fade-up">Works</h2>
+        <p class="fade-up">学習課題として制作したページ・ミニアプリです。設計意図、実装内容、改善ポイントを作品ごとに整理しています。</p>
+
+        <div class="works-grid">
+          <article class="work-card fade-up">
+            <h3>学習制作 01 | コーポレートサイト構築</h3>
+            <figure>
+              <img src="assets/work-cafe.png" alt="コーポレートサイト制作のサムネイル" width="1376" height="768" loading="lazy">
+            </figure>
+            <p class="work-meta">制作範囲: 構成 / コーディング</p>
+            <ul class="tags" aria-label="使用技術"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+            <div class="hero__actions">
+              <a href="works/cafe-latte.html" class="button button-secondary">作品ページへ</a>
+              <a href="works/detail-cafe.html" class="button button-secondary">詳細を見る</a>
+            </div>
+          </article>
+
+          <article class="work-card fade-up">
+            <h3>学習制作 02 | 応募管理ミニアプリ</h3>
+            <figure>
+              <img src="assets/work-app.png" alt="応募管理ミニアプリ制作のサムネイル" width="1376" height="768" loading="lazy">
+            </figure>
+            <p class="work-meta">制作範囲: 設計 / コーディング</p>
+            <ul class="tags" aria-label="使用技術"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+            <div class="hero__actions">
+              <a href="works/job-app-tracker.html" class="button button-secondary">作品ページへ</a>
+              <a href="works/detail-job-tracker.html" class="button button-secondary">詳細を見る</a>
+            </div>
+          </article>
+
+          <article class="work-card fade-up">
+            <h3>学習制作 03 | ランディングページ制作</h3>
+            <figure>
+              <img src="assets/work-lp.png" alt="ランディングページ制作のサムネイル" width="1365" height="768" loading="lazy">
+            </figure>
+            <p class="work-meta">制作範囲: ワイヤー作成 / コーディング</p>
+            <ul class="tags" aria-label="使用技術"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+            <div class="hero__actions">
+              <a href="works/it-school-lp.html" class="button button-secondary">作品ページへ</a>
+              <a href="works/detail-it-school-lp.html" class="button button-secondary">詳細を見る</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" aria-labelledby="skills-title">
+      <div class="section-inner">
+        <h2 id="skills-title" class="fade-up">Skills</h2>
+        <div class="skills-grid">
+          <section class="panel fade-up">
+            <h3>Languages / Markup</h3>
+            <ul>
+              <li>Java（オブジェクト指向 / 例外処理 / コレクション）</li>
+              <li>Servlet / JSP（Webアプリケーション基礎を学習中）</li>
+              <li>HTML / CSS / JavaScript（フロントエンド基礎実装）</li>
+              <li>MySQL（テーブル設計 / 正規化 / CRUD / JOIN）</li>
+              <li>Python（2026年4月から学習開始）</li>
+            </ul>
+          </section>
+          <section class="panel fade-up">
+            <h3>Tools / Others</h3>
+            <ul>
+              <li>Git（add / commit / push / pull / branch / merge）</li>
+              <li>Eclipse / VS Code</li>
+              <li>Linux（基本コマンド / 権限管理 / シェルスクリプト基礎）</li>
+              <li>Microsoft Office（Word / Excel / PowerPoint）</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="section-inner">
+        <h2 id="contact-title" class="fade-up">Contact</h2>
+        <p class="fade-up">ポートフォリオをご覧いただきありがとうございます。ご連絡は下記からお願いいたします。</p>
+        <ul class="contact-list fade-up">
+          <li><span class="contact-label">Mail</span><a href="mailto:williams7.jp.yu@gmail.com">williams7.jp.yu@gmail.com</a></li>
+          <li><span class="contact-label">GitHub</span><a href="https://github.com/williams7jpyu-dotcom" target="_blank" rel="noopener noreferrer">github.com/williams7jpyu-dotcom</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer><small>&copy; 2026 Yuta Nishimura</small></footer>
+
+  <script>
+    'use strict';
+    document.addEventListener('DOMContentLoaded', function () {
+      // 視覚効果を苦手とする設定のユーザーには、最初から要素を表示して負担を減らす。
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var fadeTargets = document.querySelectorAll('.fade-up');
+      if (prefersReduced) {
+        fadeTargets.forEach(function (el) { el.classList.add('visible'); });
+      } else {
+        // 一度表示した要素は監視対象から外し、不要な再計算を防ぐ。
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+        fadeTargets.forEach(function (el) { observer.observe(el); });
+      }
+
+      var hamburger = document.querySelector('.hamburger');
+      var nav = document.getElementById('site-nav');
+      var navLinks = document.querySelectorAll('.nav-list a');
+      if (!hamburger || !nav) return;
+      // メニュー開閉状態を1つのフラグで管理し、クリック/キー操作の分岐を単純化する。
+      var open = false;
+      function closeMenu() {
+        open = false;
+        nav.classList.remove('is-open');
+        hamburger.classList.remove('is-open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-label', 'メニューを開く');
+      }
+      function openMenu() {
+        open = true;
+        nav.classList.add('is-open');
+        hamburger.classList.add('is-open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        hamburger.setAttribute('aria-label', 'メニューを閉じる');
+      }
+      hamburger.addEventListener('click', function () {
+        if (open) closeMenu(); else openMenu();
+      });
+      // リンク遷移後にメニューを閉じないと、スマホで次画面に開いた状態が残るためここで閉じる。
+      navLinks.forEach(function (link) { link.addEventListener('click', closeMenu); });
+      document.addEventListener('click', function (e) {
+        if (open && !nav.contains(e.target) && !hamburger.contains(e.target)) closeMenu();
+      });
+      // Escで閉じたあとにボタンへフォーカスを戻し、キーボード操作の文脈を失わないようにする。
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && open) {
+          closeMenu();
+          hamburger.focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

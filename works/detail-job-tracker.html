@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>詳細解説 | 学習制作02 応募管理ミニアプリ</title>
+  <style>
+    body { margin: 0; font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; background: #f2f6fb; color: #162137; line-height: 1.75; }
+    main { width: min(960px, calc(100% - 2rem)); margin: 1.2rem auto 3rem; }
+    a { color: #2458d3; }
+    .card { background: #fff; border: 1px solid #d3ddef; border-radius: 14px; padding: 1rem 1.1rem; margin-top: .8rem; }
+    h1, h2 { margin: 0 0 .7rem; }
+    ul { margin: 0; padding-left: 1.1rem; }
+    .links { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .btn { text-decoration: none; border: 1px solid #b7c8ef; border-radius: 999px; padding: .45rem .8rem; font-weight: 700; background: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="../index.html">← ポートフォリオトップへ戻る</a></p>
+    <article class="card">
+      <h1>学習制作 02 | 応募管理ミニアプリ（JobTracker）</h1>
+      <p>DOM操作と状態管理を中心に、応募情報を管理できるシングルページアプリとして実装しました。</p>
+      <h2>実装範囲</h2>
+      <ul>
+        <li>応募情報の新規登録 / 編集 / 削除</li>
+        <li>ステータス別フィルタリング（書類〜不採用）</li>
+        <li>dialogモーダルでのフォーム入力</li>
+        <li>LocalStorageによる永続化（リロード後も維持）</li>
+      </ul>
+      <h2>設計意図</h2>
+      <ul>
+        <li>データ配列を単一の状態として管理し、描画を再生成する構成</li>
+        <li>フォーム検証を関数化して、登録/編集で共通利用</li>
+        <li>ステータス表示を色付きバッジで視認性向上</li>
+      </ul>
+      <h2>改善予定</h2>
+      <ul>
+        <li>検索機能（企業名・職種の部分一致）</li>
+        <li>期限通知・面接日管理の追加</li>
+      </ul>
+      <div class="links">
+        <a class="btn" href="job-app-tracker.html">実装ページを開く</a>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

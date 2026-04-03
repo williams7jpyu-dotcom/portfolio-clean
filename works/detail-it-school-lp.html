@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>詳細解説 | 学習制作03 ITスクールLP</title>
+  <style>
+    body { margin: 0; font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; background: #f5f8ff; color: #17203a; line-height: 1.75; }
+    main { width: min(960px, calc(100% - 2rem)); margin: 1.2rem auto 3rem; }
+    a { color: #1a56db; }
+    .card { background: #fff; border: 1px solid #d5dff3; border-radius: 14px; padding: 1rem 1.1rem; margin-top: .8rem; }
+    h1, h2 { margin: 0 0 .7rem; }
+    ul { margin: 0; padding-left: 1.1rem; }
+    .links { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .btn { text-decoration: none; border: 1px solid #b7c8ef; border-radius: 999px; padding: .45rem .8rem; font-weight: 700; background: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="../index.html">← ポートフォリオトップへ戻る</a></p>
+    <article class="card">
+      <h1>学習制作 03 | ITスクール LP（CODE BRIDGE）</h1>
+      <p>FVからCTAまでの導線設計を意識し、情報設計とUI実装を統合したランディングページです。</p>
+      <h2>実装範囲</h2>
+      <ul>
+        <li>FV / Problem / Solution / Curriculum / FAQ / Contact の1ページ構成</li>
+        <li>data属性を使ったカリキュラムタブ切り替え</li>
+        <li>details要素のFAQアコーディオン</li>
+        <li>フォームバリデーションと送信完了表示（UI）</li>
+        <li>IntersectionObserver のスクロール演出</li>
+      </ul>
+      <h2>設計意図</h2>
+      <ul>
+        <li>課題提起→解決策→行動促進の順で迷いを減らす構成</li>
+        <li>CTAを複数箇所に配置して離脱しにくい導線を設計</li>
+        <li>PC/SP両方での可読性を重視した余白とタイポ調整</li>
+      </ul>
+      <h2>改善予定</h2>
+      <ul>
+        <li>入力中バリデーション（リアルタイム）</li>
+        <li>CTAクリックの計測イベント追加</li>
+      </ul>
+      <div class="links">
+        <a class="btn" href="it-school-lp.html">実装ページを開く</a>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

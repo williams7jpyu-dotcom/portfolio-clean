@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cafe Soleil | コーポレートサイト</title>
+  <meta name="description" content="架空カフェ Cafe Soleil のコーポレートサイト。メニュー、ニュース、アクセス情報を掲載。">
+  <style>
+    :root {
+      --bg: #faf7f1;
+      --surface: #fff;
+      --text: #2f2a24;
+      --muted: #6a5d50;
+      --line: #e5d8c8;
+      --brand: #8b6f47;
+      --brand-2: #d4a96a;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 74px; }
+    body { margin: 0; color: var(--text); background: var(--bg); line-height: 1.8; font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif; }
+    img { max-width: 100%; display: block; height: auto; }
+    a { color: inherit; }
+    .skip-link { position: absolute; left: -999px; top: 0; background: #111; color: #fff; padding: .5rem .8rem; z-index: 1000; }
+    .skip-link:focus { left: 0; }
+    .container { width: min(var(--max), calc(100% - 2rem)); margin-inline: auto; }
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .site-header.is-scrolled { border-color: var(--line); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: 74px; gap: 1rem; }
+    .logo { font-family: Georgia, serif; letter-spacing: .03em; text-decoration: none; font-size: 1.15rem; font-weight: 700; color: var(--brand); }
+    .nav-list { margin: 0; padding: 0; list-style: none; display: flex; gap: 1.15rem; }
+    .nav-link { text-decoration: none; color: var(--muted); font-weight: 700; font-size: .94rem; }
+    .nav-link:hover { color: var(--brand); }
+    .menu-btn { display: none; border: 1px solid var(--line); background: #fff; padding: .5rem .65rem; border-radius: 10px; }
+    .menu-btn .line { display: block; width: 22px; height: 2px; background: #333; margin: 4px 0; }
+
+    .hero {
+      min-height: calc(100vh - 74px);
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(rgba(43,31,20,.46), rgba(43,31,20,.34)),
+        url('../assets/cafe_soleil_exterior.png') center / cover no-repeat;
+      color: #fff;
+    }
+    .hero h1 { margin: 0 0 .8rem; font-size: clamp(1.8rem, 5vw, 3rem); line-height: 1.3; }
+    .hero p { max-width: 40rem; margin: 0 0 1.2rem; }
+    .btn { display: inline-block; text-decoration: none; border-radius: 999px; padding: .7rem 1.2rem; font-weight: 700; }
+    .btn-primary { background: var(--brand-2); color: #3b2a15; }
+    .btn-secondary { border: 1px solid rgba(255,255,255,.5); color: #fff; margin-left: .55rem; }
+
+    section { padding: 4rem 0; border-bottom: 1px solid var(--line); }
+    .section-title { margin: 0 0 1.2rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+    .concept-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; align-items: center; }
+    .concept-img {
+      min-height: 280px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+    .menu-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+    .menu-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: .85rem; }
+    .menu-thumb {
+      border-radius: 10px;
+      min-height: 140px;
+      margin-bottom: .6rem;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: center center;
+      border: 1px solid var(--line);
+      background: #f4eadf;
+    }
+    .menu-thumb--coffee { object-position: center center; }
+    .menu-thumb--latte { object-position: 34% center; }
+    .menu-thumb--tart { object-position: 28% center; }
+    .menu-card h3 { margin: 0 0 .2rem; font-size: 1rem; }
+    .price { color: var(--brand); font-weight: 700; }
+    .news-list { margin: 0; padding: 0; list-style: none; }
+    .news-list li { padding: .75rem 0; border-bottom: 1px dashed var(--line); }
+    .news-list time { color: var(--muted); font-weight: 700; margin-right: .8rem; }
+    .access-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; }
+    .map-embed { border: 0; width: 100%; min-height: 280px; border-radius: 14px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    th, td { padding: .7rem; border-bottom: 1px solid var(--line); text-align: left; }
+    th { width: 36%; color: var(--muted); background: #fcfaf7; }
+    .site-footer { text-align: center; padding: 2rem 1rem 3.2rem; color: var(--muted); }
+    .to-top { position: fixed; right: 1rem; bottom: 1rem; display: none; border: 0; border-radius: 999px; background: var(--brand); color: #fff; width: 44px; height: 44px; font-weight: 700; cursor: pointer; }
+    .to-top.show { display: inline-block; }
+    .fade-up { opacity: 0; transform: translateY(16px); transition: opacity .55s ease, transform .55s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+    @media (max-width: 880px) {
+      .concept-grid, .access-grid, .menu-grid { grid-template-columns: 1fr; }
+      .site-nav { display: none; position: absolute; left: 0; right: 0; top: 74px; background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      .site-nav.open { display: block; }
+      .nav-list { display: block; }
+      .nav-link { display: block; padding: .8rem 1rem; }
+      .menu-btn { display: block; }
+      .btn-secondary { margin-left: 0; margin-top: .55rem; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">本文へスキップ</a>
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a href="#hero" class="logo">Cafe Soleil</a>
+      <button class="menu-btn" id="menu-btn" aria-controls="global-nav" aria-expanded="false" aria-label="メニューを開く">
+        <span class="line"></span><span class="line"></span><span class="line"></span>
+      </button>
+      <nav class="site-nav" id="global-nav" aria-label="メインナビゲーション">
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#concept">Concept</a></li>
+          <li><a class="nav-link" href="#menu">Menu</a></li>
+          <li><a class="nav-link" href="#news">News</a></li>
+          <li><a class="nav-link" href="#access">Access</a></li>
+          <li><a class="nav-link" href="../index.html">Portfolio</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="hero" class="hero">
+      <div class="container">
+        <h1>日常に、ゆとりの一杯を。</h1>
+        <p>都市の中で深呼吸できる場所を目指した、架空カフェ「Cafe Soleil」のコーポレートサイトです。</p>
+        <a href="#menu" class="btn btn-primary">MENUを見る</a>
+        <a href="#access" class="btn btn-secondary">アクセス</a>
+      </div>
+    </section>
+
+    <section id="concept">
+      <div class="container concept-grid fade-up">
+        <div>
+          <h2 class="section-title">Concept</h2>
+          <p>朝の静けさ、昼のやわらかな光、夜の落ち着き。どの時間帯でも居心地よく過ごせる空間をテーマに、情報の読みやすさを意識して構成しています。</p>
+          <p>見出し階層とセクション分割を明確にし、ユーザーが必要な情報に迷わず到達できる導線にしました。</p>
+        </div>
+        <img class="concept-img" src="../assets/cafe_soleil_logo.png" alt="Cafe Soleilのロゴ" width="768" height="768" loading="lazy">
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="container fade-up">
+        <h2 class="section-title">Menu</h2>
+        <div class="menu-grid">
+          <article class="menu-card"><img class="menu-thumb menu-thumb--coffee" src="../assets/cafe_menu_coffee.jpg" alt="ドリップコーヒー" width="512" height="512" loading="lazy"><h3>ドリップコーヒー</h3><p class="price">¥550</p><p>豆の香りを活かした定番ブレンド。</p></article>
+          <article class="menu-card"><img class="menu-thumb menu-thumb--latte" src="../assets/cafe_menu_latte.jpg" alt="カフェラテ" width="512" height="512" loading="lazy"><h3>カフェラテ</h3><p class="price">¥620</p><p>ミルクの甘みを感じる一杯。</p></article>
+          <article class="menu-card"><img class="menu-thumb menu-thumb--tart" src="../assets/cafe_menu_tart.jpg" alt="季節のタルト" width="512" height="512" loading="lazy"><h3>季節のタルト</h3><p class="price">¥680</p><p>旬の果物を使った日替わりタルト。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="news">
+      <div class="container fade-up">
+        <h2 class="section-title">News</h2>
+        <ul class="news-list">
+          <li><time datetime="2026-03-20">2026.03.20</time>営業時間を 8:00 - 21:00 に変更しました。</li>
+          <li><time datetime="2026-03-10">2026.03.10</time>公式サイトを公開しました。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="access">
+      <div class="container access-grid fade-up">
+        <div>
+          <h2 class="section-title">Access</h2>
+          <iframe class="map-embed" title="店舗所在地地図" loading="lazy"
+            src="https://www.google.com/maps?q=%E4%BA%80%E6%9C%89%E9%A7%85&output=embed"></iframe>
+        </div>
+        <div>
+          <table>
+            <tr><th>住所</th><td>東京都葛飾区（架空）</td></tr>
+            <tr><th>営業時間</th><td>8:00 - 21:00</td></tr>
+            <tr><th>定休日</th><td>不定休</td></tr>
+            <tr><th>席数</th><td>28席</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">ポートフォリオトップへ戻る</a></p>
+    <small>&copy; 2026 Cafe Soleil</small>
+  </footer>
+  <button class="to-top" id="to-top" aria-label="ページ上部へ移動">↑</button>
+
+  <script>
+    'use strict';
+    document.addEventListener('DOMContentLoaded', function () {
+      var menuBtn = document.getElementById('menu-btn');
+      var nav = document.getElementById('global-nav');
+      var navLinks = document.querySelectorAll('.nav-link');
+      var header = document.getElementById('site-header');
+      var toTop = document.getElementById('to-top');
+      // 開閉状態を手元で保持して、DOM状態と同期させる。
+      var isOpen = false;
+
+      function closeMenu() {
+        isOpen = false;
+        nav.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.setAttribute('aria-label', 'メニューを開く');
+      }
+      function openMenu() {
+        isOpen = true;
+        nav.classList.add('open');
+        menuBtn.setAttribute('aria-expanded', 'true');
+        menuBtn.setAttribute('aria-label', 'メニューを閉じる');
+      }
+
+      menuBtn.addEventListener('click', function () { isOpen ? closeMenu() : openMenu(); });
+      // スマホでリンク押下後にメニューが残るのを防ぐ。
+      navLinks.forEach(function (link) { link.addEventListener('click', closeMenu); });
+
+      document.addEventListener('click', function (e) {
+        if (isOpen && !nav.contains(e.target) && !menuBtn.contains(e.target)) closeMenu();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isOpen) {
+          closeMenu();
+          menuBtn.focus();
+        }
+      });
+
+      window.addEventListener('scroll', function () {
+        // ヘッダーの見え方を切り替えて、背景写真の上でも現在位置を把握しやすくする。
+        if (window.scrollY > 12) header.classList.add('is-scrolled');
+        else header.classList.remove('is-scrolled');
+        // ページ下部で上に戻りやすいよう、一定スクロール後にのみ表示する。
+        if (window.scrollY > 420) toTop.classList.add('show');
+        else toTop.classList.remove('show');
+      });
+
+      toTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      var fadeTargets = document.querySelectorAll('.fade-up');
+      // セクションが視界に入ったタイミングで表示し、読み進める流れを作る。
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      fadeTargets.forEach(function (el) { observer.observe(el); });
+    });
+  </script>
+</body>
+</html>
